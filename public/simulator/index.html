@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Zoom Workplace Meeting Simulator (Windows 11)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="sim-wrapper">
+    <!-- Simulator Top Navigation Bar -->
+    <header class="sim-topbar">
+      <div class="sim-brand">
+        <span class="sim-badge">🧪 Zoom Workplace v7.1.5 Simulator</span>
+        <span>Windows 11 Native Test Environment</span>
+      </div>
+      <div class="sim-actions">
+        <a href="/dashboard" target="_blank" class="btn-link">📊 Open Saved Transcripts Dashboard ↗</a>
+      </div>
+    </header>
+
+    <!-- Main Simulator Container (Mock Zoom Window) -->
+    <div class="zoom-window-frame">
+      <!-- Zoom Window Title Bar (Windows 11 Style) -->
+      <div class="zoom-titlebar">
+        <div class="zoom-logo">
+          <span class="z-icon">🎥</span>
+          <span id="win-title">Zoom Workplace - Meeting Simulator</span>
+        </div>
+        <div class="win-controls">
+          <span class="win-btn">—</span>
+          <span class="win-btn">◻</span>
+          <span class="win-btn close">✕</span>
+        </div>
+      </div>
+
+      <!-- Zoom Meeting Stage & In-App Side Panel Layout -->
+      <div class="zoom-main-body">
+        <!-- Main Meeting Video Area -->
+        <div class="zoom-video-area">
+          <div class="meeting-header-overlay">
+            <div class="shield-badge">🛡️ End-to-End Encrypted</div>
+            <div class="meeting-topic-title" id="disp-topic">Weekly Team Sync</div>
+            <div class="meeting-id-pill" id="disp-id">ID: 849 2039 1192</div>
+          </div>
+
+          <!-- Video Grid / Avatar Cards -->
+          <div class="video-grid">
+            <div class="participant-box active-speaker" id="card-you">
+              <div class="avatar-circle">👤</div>
+              <span class="p-name">You (Host) 🎙️</span>
+              <div class="talking-ring"></div>
+            </div>
+            <div class="participant-box" id="card-sarah">
+              <div class="avatar-circle" style="background:#8b5cf6;">👩‍💼</div>
+              <span class="p-name">Sarah (Product)</span>
+            </div>
+            <div class="participant-box" id="card-david">
+              <div class="avatar-circle" style="background:#10b981;">👨‍💻</div>
+              <span class="p-name">David (Engineering)</span>
+            </div>
+          </div>
+
+          <!-- Zoom Meeting Bottom Control Toolbar -->
+          <div class="zoom-toolbar">
+            <div class="tool-group">
+              <button class="tb-btn" id="btn-mock-mute">
+                <span class="tb-icon">🎤</span>
+                <span>Mute</span>
+              </button>
+              <button class="tb-btn">
+                <span class="tb-icon">📹</span>
+                <span>Stop Video</span>
+              </button>
+            </div>
+            <div class="tool-group center">
+              <button class="tb-btn">
+                <span class="tb-icon">👥</span>
+                <span>Participants (3)</span>
+              </button>
+              <button class="tb-btn">
+                <span class="tb-icon">💬</span>
+                <span>Chat</span>
+              </button>
+              <button class="tb-btn">
+                <span class="tb-icon">⬆️</span>
+                <span>Share Screen</span>
+              </button>
+              <button class="tb-btn active" id="btn-toggle-app-panel">
+                <span class="tb-icon">🎙️</span>
+                <span>Apps (AutoTranscript)</span>
+              </button>
+            </div>
+            <div class="tool-group">
+              <button class="tb-btn btn-leave" id="btn-leave-meeting">
+                <span>End / Leave</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- In-Meeting Side Panel (Embedded Zoom App) -->
+        <div class="zoom-sidepanel">
+          <div class="sidepanel-header">
+            <div class="sp-title">
+              <span>🎙️ Auto-Transcript Taker</span>
+              <span class="sp-tag">In-Meeting App</span>
+            </div>
+          </div>
+          <iframe id="zoom-app-frame" src="/zoom-app" class="zoom-app-iframe"></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- Simulator Control Deck (Bottom) -->
+    <div class="sim-deck">
+      <div class="deck-section">
+        <h4>1️⃣ Meeting Lifecycle Triggers</h4>
+        <div class="deck-btn-group">
+          <button id="sim-join" class="btn btn-green">🚪 Enter Meeting Room (Auto-Starts)</button>
+          <button id="sim-leave" class="btn btn-red">🏃 Leave Room (Triggers Auto-Save)</button>
+          <button id="sim-new-topic" class="btn btn-secondary">🔄 Change Meeting Topic</button>
+        </div>
+      </div>
+
+      <div class="deck-section">
+        <h4>2️⃣ Speech Input Simulation</h4>
+        <div class="deck-btn-group">
+          <select id="sim-speaker-select" class="sim-select">
+            <option value="You (Host)">Speaker: You (Host)</option>
+            <option value="Sarah (Product)">Speaker: Sarah (Product)</option>
+            <option value="David (Engineering)">Speaker: David (Engineering)</option>
+          </select>
+          <button id="sim-speak-1" class="btn btn-blue">🗣️ "Let's review the sprint objectives"</button>
+          <button id="sim-speak-2" class="btn btn-blue">🗣️ "All tests passed for the auto-transcript plugin"</button>
+          <button id="sim-speak-3" class="btn btn-blue">🗣️ "Let's wrap up and save the transcript"</button>
+        </div>
+      </div>
+
+      <div class="deck-section">
+        <h4>3️⃣ Custom Speech Prompt</h4>
+        <div class="custom-speech-row">
+          <input type="text" id="sim-custom-text" placeholder="Type custom speech dialogue to simulate..." class="sim-input">
+          <button id="sim-btn-send-speech" class="btn btn-primary">💬 Inject Dialogue</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="simulator.js"></script>
+</body>
+</html>
