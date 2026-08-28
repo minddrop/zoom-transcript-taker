@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Zoom Workplace Transcripts Manager (Windows 11)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="dashboard-layout">
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-icon">📁</div>
+        <div class="brand-info">
+          <h2>Zoom Transcripts</h2>
+          <span class="brand-tag">Windows 11 Companion</span>
+        </div>
+      </div>
+
+      <nav class="nav-menu">
+        <a href="#transcripts" class="nav-item active" id="nav-transcripts">
+          <span class="nav-icon">📚</span>
+          <span>All Transcripts</span>
+          <span class="badge" id="sidebar-count">0</span>
+        </a>
+        <a href="#live" class="nav-item" id="nav-live">
+          <span class="nav-icon">🔴</span>
+          <span>Live Monitor</span>
+          <span class="pulse-dot" id="live-indicator"></span>
+        </a>
+        <a href="/simulator" class="nav-item" target="_blank">
+          <span class="nav-icon">🧪</span>
+          <span>Zoom Simulator</span>
+          <span class="nav-ext">↗</span>
+        </a>
+        <a href="/zoom-app" class="nav-item" target="_blank">
+          <span class="nav-icon">🎙️</span>
+          <span>Zoom App Panel</span>
+          <span class="nav-ext">↗</span>
+        </a>
+        <a href="#settings" class="nav-item" id="nav-settings">
+          <span class="nav-icon">⚙️</span>
+          <span>Settings</span>
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="status-card">
+          <div class="status-header">
+            <span class="status-dot online"></span>
+            <span class="status-title">Daemon Online</span>
+          </div>
+          <p class="status-path" id="sidebar-path">./transcripts</p>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+      <!-- Top Bar -->
+      <header class="top-bar">
+        <div class="search-box">
+          <span class="search-icon">🔍</span>
+          <input type="text" id="search-input" placeholder="Search meetings, topics, speakers, or dialogue keywords...">
+        </div>
+        <div class="top-actions">
+          <button id="btn-refresh" class="btn btn-secondary">
+            <span>🔄</span> Refresh
+          </button>
+          <button id="btn-open-folder" class="btn btn-primary" title="Open transcripts folder">
+            <span>📂</span> Folder: <code id="header-folder-name">./transcripts</code>
+          </button>
+        </div>
+      </header>
+
+      <!-- Stats Overview Cards -->
+      <section class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon icon-blue">📊</div>
+          <div class="stat-data">
+            <span class="stat-label">Total Meetings</span>
+            <h3 id="stat-total-meetings">0</h3>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon icon-purple">💬</div>
+          <div class="stat-data">
+            <span class="stat-label">Total Words Logged</span>
+            <h3 id="stat-total-words">0</h3>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon icon-green">⏱️</div>
+          <div class="stat-data">
+            <span class="stat-label">Total Recorded Time</span>
+            <h3 id="stat-total-time">00:00:00</h3>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon icon-amber">⚡</div>
+          <div class="stat-data">
+            <span class="stat-label">Auto-Save Formats</span>
+            <h3 id="stat-formats">MD, TXT, JSON, VTT</h3>
+          </div>
+        </div>
+      </section>
+
+      <!-- Live Stream Alert Banner (if active) -->
+      <div id="live-banner" class="live-banner hidden">
+        <div class="live-banner-content">
+          <div class="live-tag">
+            <span class="live-rec-dot"></span> LIVE IN-PROGRESS
+          </div>
+          <div class="live-topic-info">
+            <strong id="live-topic-name">Zoom Workplace Meeting</strong>
+            <span id="live-speaker-name">(Active Speaker)</span>
+          </div>
+          <div class="live-last-text" id="live-last-text">"..."</div>
+        </div>
+        <a href="/zoom-app" target="_blank" class="btn btn-sm btn-primary">Open In-Meeting View</a>
+      </div>
+
+      <!-- Transcript List Section -->
+      <section class="transcripts-section">
+        <div class="section-title-bar">
+          <h2>Meeting Transcripts Archive</h2>
+          <div class="filter-controls">
+            <select id="speaker-filter" class="filter-select">
+              <option value="">All Speakers</option>
+            </select>
+          </div>
+        </div>
+
+        <div id="transcripts-container" class="transcripts-container">
+          <!-- Populated by JavaScript -->
+          <div class="loading-state" id="loading-spinner">
+            <div class="spinner"></div>
+            <p>Loading transcripts from local disk...</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Settings Section View (Hidden by default) -->
+      <section id="settings-section" class="settings-section hidden">
+        <div class="settings-card">
+          <h2>⚙️ Auto-Transcript Settings & Windows 11 Storage</h2>
+          
+          <div class="form-group">
+            <label for="setting-dir">Transcripts Save Directory (Windows 11 path or local folder):</label>
+            <input type="text" id="setting-dir" class="form-input" placeholder="e.g. C:\Users\Username\Documents\ZoomTranscripts">
+            <small>Transcripts will be automatically saved here every time you leave a Zoom room.</small>
+          </div>
+
+          <div class="form-group">
+            <label>Auto-Save File Formats:</label>
+            <div class="checkbox-group">
+              <label class="checkbox-label"><input type="checkbox" id="fmt-md" checked> Markdown (<code>.md</code>) - Formatted with summary & table</label>
+              <label class="checkbox-label"><input type="checkbox" id="fmt-txt" checked> Plain Text (<code>.txt</code>) - Clean timestamped dialogue</label>
+              <label class="checkbox-label"><input type="checkbox" id="fmt-json" checked> JSON (<code>.json</code>) - Full structured data</label>
+              <label class="checkbox-label"><input type="checkbox" id="fmt-vtt" checked> WebVTT (<code>.vtt</code>) - Video caption subtitles</label>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="setting-lang">Default Speech Recognition Language:</label>
+            <select id="setting-lang" class="form-select">
+              <option value="en-US">English (United States)</option>
+              <option value="en-GB">English (United Kingdom)</option>
+              <option value="ja-JP">Japanese (日本語)</option>
+              <option value="es-ES">Spanish (Español)</option>
+              <option value="de-DE">German (Deutsch)</option>
+              <option value="fr-FR">French (Français)</option>
+              <option value="zh-CN">Chinese (Mandarin 简体中文)</option>
+            </select>
+          </div>
+
+          <div class="form-actions">
+            <button id="btn-save-settings" class="btn btn-primary">💾 Save Settings</button>
+            <button id="btn-test-save" class="btn btn-secondary">🧪 Create Sample Test File</button>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- Transcript Detail Modal -->
+  <div id="detail-modal" class="modal-overlay hidden">
+    <div class="modal-card">
+      <header class="modal-header">
+        <div>
+          <h2 id="modal-topic">Meeting Topic</h2>
+          <div class="modal-meta-row" id="modal-meta-sub">
+            <span id="modal-date">Aug 28, 2026</span> • <span id="modal-duration">00:15:30</span> • <span id="modal-speakers">Speakers</span>
+          </div>
+        </div>
+        <button id="modal-close" class="modal-close-btn">&times;</button>
+      </header>
+
+      <!-- Tabs -->
+      <div class="modal-tabs">
+        <button class="tab-btn active" data-tab="formatted">📄 Formatted Notes</button>
+        <button class="tab-btn" data-tab="timeline">💬 Dialogue Timeline</button>
+        <button class="tab-btn" data-tab="raw-txt">📝 Raw Text</button>
+        <button class="tab-btn" data-tab="raw-vtt">🎬 WebVTT Subtitles</button>
+        <button class="tab-btn" data-tab="raw-json">⚙️ JSON Data</button>
+      </div>
+
+      <!-- Tab Contents -->
+      <div class="modal-body">
+        <div id="tab-formatted" class="tab-pane active">
+          <div class="markdown-preview" id="modal-md-content"></div>
+        </div>
+
+        <div id="tab-timeline" class="tab-pane">
+          <div class="timeline-feed" id="modal-timeline-content"></div>
+        </div>
+
+        <div id="tab-raw-txt" class="tab-pane">
+          <pre class="code-box" id="modal-txt-content"></pre>
+        </div>
+
+        <div id="tab-raw-vtt" class="tab-pane">
+          <pre class="code-box" id="modal-vtt-content"></pre>
+        </div>
+
+        <div id="tab-raw-json" class="tab-pane">
+          <pre class="code-box" id="modal-json-content"></pre>
+        </div>
+      </div>
+
+      <!-- Modal Footer -->
+      <footer class="modal-footer">
+        <div class="export-dropdown">
+          <button id="btn-export-options" class="btn btn-secondary">⬇️ Download Local File</button>
+          <div class="dropdown-menu" id="export-menu">
+            <a href="#" id="dl-md">Markdown (.md)</a>
+            <a href="#" id="dl-txt">Plain Text (.txt)</a>
+            <a href="#" id="dl-json">Structured JSON (.json)</a>
+            <a href="#" id="dl-vtt">WebVTT Captions (.vtt)</a>
+          </div>
+        </div>
+        <button id="btn-copy-modal" class="btn btn-primary">📋 Copy Markdown</button>
+      </footer>
+    </div>
+  </div>
+
+  <script src="dashboard.js"></script>
+</body>
+</html>
