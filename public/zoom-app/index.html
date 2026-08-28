@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Zoom Workplace Auto-Transcript Taker</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="app-container">
+    <!-- Top Header Bar -->
+    <header class="app-header">
+      <div class="header-left">
+        <div class="logo-badge">
+          <span class="logo-icon">🎙️</span>
+          <span class="logo-title">AutoTranscript</span>
+        </div>
+        <span class="version-tag">v7.1.5 Native</span>
+      </div>
+      <div class="header-right">
+        <div id="connection-status" class="status-badge connecting">
+          <span class="status-dot"></span>
+          <span class="status-text">Connecting...</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- Meeting Info Banner -->
+    <section class="meeting-card">
+      <div class="meeting-meta">
+        <div class="meta-row">
+          <span class="meta-label">Topic:</span>
+          <span id="meeting-topic" class="meta-value">Connecting to Zoom...</span>
+        </div>
+        <div class="meta-row sub-row">
+          <div><span class="meta-label">ID:</span> <span id="meeting-id" class="meta-value-mono">---</span></div>
+          <div><span class="meta-label">Speaker:</span> <span id="current-speaker" class="meta-value">Detecting...</span></div>
+        </div>
+      </div>
+      
+      <!-- Live Metrics Bar -->
+      <div class="metrics-bar">
+        <div class="metric-item">
+          <span class="metric-label">Duration</span>
+          <span id="timer-display" class="metric-value">00:00:00</span>
+        </div>
+        <div class="metric-divider"></div>
+        <div class="metric-item">
+          <span class="metric-label">Utterances</span>
+          <span id="utterance-count" class="metric-value">0</span>
+        </div>
+        <div class="metric-divider"></div>
+        <div class="metric-item">
+          <span class="metric-label">Words</span>
+          <span id="word-count" class="metric-value">0</span>
+        </div>
+        <div class="metric-divider"></div>
+        <div class="metric-item">
+          <span class="metric-label">Auto-Save</span>
+          <span class="metric-value highlight-green">ON LEAVE</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Audio Visualizer Bar -->
+    <div class="audio-activity-container">
+      <div class="audio-label">
+        <span class="live-rec-dot"></span>
+        <span id="audio-state-text">Auto-Transcription Active</span>
+      </div>
+      <div class="audio-bars" id="audio-visualizer">
+        <div class="bar"></div>
+        <div class="bar"></div>
+        <div class="bar"></div>
+        <div class="bar"></div>
+        <div class="bar"></div>
+        <div class="bar"></div>
+        <div class="bar"></div>
+        <div class="bar"></div>
+        <div class="bar"></div>
+        <div class="bar"></div>
+        <div class="bar"></div>
+        <div class="bar"></div>
+      </div>
+    </div>
+
+    <!-- Live Transcript Feed -->
+    <main class="transcript-section">
+      <div class="section-header">
+        <h3>Live Meeting Stream</h3>
+        <div class="feed-actions">
+          <button id="btn-copy" class="btn-icon" title="Copy transcript to clipboard">📋 Copy</button>
+          <button id="btn-clear" class="btn-icon" title="Clear view">🧹 Clear</button>
+        </div>
+      </div>
+
+      <div id="transcript-feed" class="transcript-feed">
+        <div class="empty-state" id="empty-state">
+          <div class="empty-icon">🎧</div>
+          <p>Listening automatically...</p>
+          <small>Start speaking or let participants speak. Transcription will log in real-time and auto-save when you exit the room.</small>
+        </div>
+      </div>
+
+      <!-- Live Interim Bubble -->
+      <div id="interim-bubble" class="interim-bubble hidden">
+        <span class="interim-speaker" id="interim-speaker">You:</span>
+        <span class="interim-text" id="interim-text">...</span>
+      </div>
+    </main>
+
+    <!-- Auto-Save Notification Toast -->
+    <div id="save-toast" class="save-toast hidden">
+      <span class="toast-icon">💾</span>
+      <div class="toast-content">
+        <div class="toast-title">Auto-Saved to Local Storage!</div>
+        <div id="toast-details" class="toast-subtitle">Saved to ./transcripts/</div>
+      </div>
+    </div>
+
+    <!-- Bottom Controls Footer -->
+    <footer class="app-footer">
+      <div class="footer-buttons">
+        <button id="btn-toggle-mic" class="btn btn-secondary">
+          <span id="mic-icon">🎤</span>
+          <span id="mic-text">Pause Mic</span>
+        </button>
+        <button id="btn-save-now" class="btn btn-primary">
+          <span>💾</span>
+          <span>Save Now</span>
+        </button>
+        <a href="/dashboard" target="_blank" class="btn btn-outline" title="Open Local Management Dashboard">
+          <span>📊</span>
+          <span>Transcripts</span>
+        </a>
+      </div>
+      <div class="footer-note">
+        <span>⚡ Auto-saves <code>.md</code>, <code>.txt</code>, <code>.json</code>, <code>.vtt</code> to Windows local disk</span>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Zoom Apps SDK -->
+  <script src="https://appssdk.zoom.us/sdk.min.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
