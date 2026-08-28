@@ -1,0 +1,13 @@
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.env
+transcripts/*.json
+transcripts/*.md
+transcripts/*.txt
+transcripts/*.vtt
+!transcripts/.gitkeep
+test/test_transcripts/
+.DS_Store
+Thumbs.db

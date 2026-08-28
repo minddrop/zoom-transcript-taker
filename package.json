@@ -1,0 +1,28 @@
+{
+  "name": "zoom-transcript-taker",
+  "version": "1.0.0",
+  "description": "Zoom Workplace (v7.1.5 Native Windows App) Auto-Transcript Plugin & Local Storage Suite",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js",
+    "test": "node test/server.test.js"
+  },
+  "keywords": [
+    "zoom",
+    "zoom-apps",
+    "zoom-workplace",
+    "transcription",
+    "auto-transcript",
+    "speech-to-text",
+    "windows-11"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "ws": "^8.18.0"
+  }
+}
